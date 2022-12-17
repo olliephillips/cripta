@@ -1,0 +1,9 @@
+.DS_Store
+/.idea
+/mailbox
+/groups
+/friend_keys
+.my_private_key
+my_public_key.txt
+config.env
+/cripta
