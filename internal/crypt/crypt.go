@@ -14,7 +14,7 @@ import (
 	"strings"
 )
 
-func MakeKeys(pubKeyPath, privKeyPath string) error {
+func MakeKeys(pubKeyPath, privKeyPath, friendSelf string) error {
 	// generate a new RSA private key
 	privateKey, err := rsa.GenerateKey(rand.Reader, 4096)
 	if err != nil {
@@ -52,6 +52,17 @@ func MakeKeys(pubKeyPath, privKeyPath string) error {
 	defer publicKeyFile.Close()
 
 	if err := pem.Encode(publicKeyFile, &pem.Block{Type: "RSA PUBLIC KEY", Bytes: publicKeyPEM}); err != nil {
+		return err
+	}
+
+	// duplicate pub key in friends folder
+	friendSelfKey, err := os.Create(friendSelf)
+	if err != nil {
+		return err
+	}
+	defer friendSelfKey.Close()
+
+	if err := pem.Encode(friendSelfKey, &pem.Block{Type: "RSA PUBLIC KEY", Bytes: publicKeyPEM}); err != nil {
 		return err
 	}
 

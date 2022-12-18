@@ -67,9 +67,13 @@ func init() {
 	// if not make new
 	if makeNewKeys {
 		log.Println("Creating your public/private key pair")
-		if err := crypt.MakeKeys(pubKeyPath, privateKeyPath); err != nil {
+		// add users public key to friend
+		f := fmt.Sprintf("%s.txt", strings.ToLower(os.Getenv("TWITTER_USERNAME")))
+		friendSelfKey := filepath.Join(internal.FRIEND_KEYS_FOLDER, f)
+		if err := crypt.MakeKeys(pubKeyPath, privateKeyPath, friendSelfKey); err != nil {
 			log.Fatalf("Problem creating the public/private key pair: %v\n", err)
 		}
+
 	}
 }
 
