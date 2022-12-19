@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/olliephillips/cripta/internal/display"
+	"github.com/olliephillips/cripta/internal/group"
 	"github.com/olliephillips/cripta/internal/mailbox"
 	"log"
 	"os"
@@ -121,9 +122,27 @@ func ReadStdin(outbox chan<- string, disconnect chan<- struct{}, mb mailbox.Mail
 		case strings.HasPrefix(text, "->") && splitLen > 1:
 			fmt.Println("group send - not implemented..")
 		case text == "friends":
-			fmt.Println("friend list - not implemented..")
+			var out string
+			fr, err := mailbox.ListFriends()
+			if err != nil {
+				log.Println("There was a problem, could not list friends")
+				panic(err.(any))
+			}
+			for _, v := range fr {
+				out += fmt.Sprintf("%s\n", v)
+			}
+			fmt.Println(out)
 		case text == "groups":
-			fmt.Println("group list - not implemented..")
+			var out string
+			fr, err := group.ListGroups()
+			if err != nil {
+				log.Println("There was a problem, could not list groups")
+				panic(err.(any))
+			}
+			for _, v := range fr {
+				out += fmt.Sprintf("%s\n", v)
+			}
+			fmt.Println(out)
 		case text == "":
 		default:
 			fmt.Println("Not understood, showing available commands..")
