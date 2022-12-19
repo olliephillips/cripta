@@ -4,8 +4,8 @@
 
 [![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/olliephillips/cripta?style=flat-square)](https://go.dev/)
 [![Go Report Card](https://goreportcard.com/badge/github.com/olliephillips/cripta?style=flat-square)](https://goreportcard.com/report/github.com/olliephillips/cripta)
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/olliephillips/cripta/workflows/build.yaml?branch=master&style=flat-square)](https://github.com/olliephillips/cripta/actions/workflows/build.yml)
-[![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/olliephillips/cripta/workflows/unit_test.yaml?branch=master&label=tests&style=flat-square)](https://github.com/olliephillips/cripta/actions/workflows/unit_test.yml)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/olliephillips/cripta/workflows/build.yml?branch=master&style=flat-square)](https://github.com/olliephillips/cripta/actions/workflows/build.yml)
+[![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/olliephillips/cripta/workflows/unit_test.yml?branch=master&label=tests&style=flat-square)](https://github.com/olliephillips/cripta/actions/workflows/unit_test.yml)
 
 [![GitHub Release Date](https://img.shields.io/github/release-date/olliephillips/cripta?style=flat-square)](https://github.com/olliephillips/cripta/releases)
 [![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/olliephillips/cripta/latest?style=flat-square)](https://github.com/olliephillips/cripta/commits)
