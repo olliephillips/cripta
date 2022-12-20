@@ -10,7 +10,7 @@ builds:
       - windows
     ldflags:
       - -s -w -X main.version={{.Tag}} -X main.goversion=1.19
-    main: ./cmd/dozer
+    main: ./cmd/cripta
 archives:
   - replacements:
       darwin: Darwin
