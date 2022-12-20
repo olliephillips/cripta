@@ -120,7 +120,20 @@ func ReadStdin(outbox chan<- string, disconnect chan<- struct{}, mb mailbox.Mail
 				deleteId = ""
 			}
 		case strings.HasPrefix(text, "->") && splitLen > 1:
-			fmt.Println("group send - not implemented..")
+			// strip prefix
+			grp := strings.TrimLeft(split[0], "->")
+			fmt.Printf("Sending to group:%s\n", grp)
+			groupMembers, err := group.ListMembers(grp)
+			if err != nil {
+				log.Println("There was a problem, retrieve group members")
+				panic(err.(any))
+			}
+
+			// got the members, send the message to each
+			for _, member := range groupMembers {
+				msg := fmt.Sprintf("@%s %s", member, split[1])
+				outbox <- msg
+			}
 		case text == "friends":
 			var out string
 			fr, err := mailbox.ListFriends()
