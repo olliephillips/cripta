@@ -16,10 +16,14 @@ configurable, to use a different broker edit, rebuild the app and distribute tha
 
 ## Features
 
-- Asymmetric Encryption using recipient public key
+- Asymmetric encryption using recipient public key
 - Inbox management (list, read, delete & empty)
-- Mail groups (TODO)
+- Mail groups
 - Message signing with private key (TODO)
+
+## Releases
+
+Download an executable for your OS [here](https://github.com/olliephillips/cripta/releases).
 
 ## Tests
 
