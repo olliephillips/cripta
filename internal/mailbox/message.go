@@ -2,6 +2,8 @@ package mailbox
 
 import (
 	"github.com/olliephillips/cripta/internal"
+	"github.com/olliephillips/cripta/internal/crypt"
+	"log"
 	"strings"
 	"time"
 )
@@ -18,7 +20,8 @@ type Message struct {
 // OutboundMessage ideally stores the recipient
 type OutboundMessage struct {
 	Message
-	To string
+	To        string
+	Signature []byte `json:"signature"`
 }
 
 type EncryptedMQTT struct {
@@ -48,6 +51,13 @@ func NewOutboundMessage(raw string, fromUser string) OutboundMessage {
 	obm.Body = body
 	obm.Sender = fromUser
 	obm.Sent = time.Now().Format("Mon Jan 2 15:04 MST 2006")
+
+	// sign the message body and include sig
+	sig, err := crypt.SignPayload([]byte(obm.Body), internal.PRIVATE_KEY_FILE)
+	if err != nil {
+		log.Printf("Failed to get signature: %v\n", err)
+	}
+	obm.Signature = sig
 
 	return obm
 }

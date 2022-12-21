@@ -19,7 +19,7 @@ configurable, to use a different broker edit, rebuild the app and distribute tha
 - Asymmetric encryption using recipient public key
 - Inbox management (list, read, delete & empty)
 - Mail groups
-- Message signing with private key (TODO)
+- Message signing with private key
 
 ## Releases
 

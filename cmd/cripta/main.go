@@ -105,6 +105,29 @@ func main() {
 				return
 			}
 
+			// get signature
+			var sig struct {
+				Signature []byte `json:"signature"`
+			}
+
+			if err := json.Unmarshal(jsonPayload, &sig); err != nil {
+				log.Printf("Problem unmarshalling message: %v\n", err)
+				return
+			}
+
+			// verify the message signature
+			goodSig, err := crypt.VerifySignature(msg.Sender, []byte(msg.Body), internal.FRIEND_KEYS_FOLDER, sig.Signature)
+			if err != nil {
+				log.Printf("Problem with verifying signature: %v\n", err)
+				return
+			}
+
+			if !goodSig {
+				msg.Subject += " (signature unverified!)"
+			} else {
+				msg.Body += fmt.Sprintf("\n\nSender signature verified\n")
+			}
+
 			if err := mb.Set(msg); err != nil {
 				log.Printf("Problem writing message: %v\n", err)
 			}

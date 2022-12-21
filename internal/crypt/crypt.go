@@ -1,6 +1,7 @@
 package crypt
 
 import (
+	"crypto"
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha256"
@@ -71,21 +72,6 @@ func MakeKeys(pubKeyPath, privKeyPath, friendSelf string) error {
 
 // EncryptMessageWithPublicKey does what you might expect
 func EncryptMessageWithPublicKey(payload []byte, toUser string, friendKeyPath string) ([]byte, error) {
-	/*var encMessage, label []byte
-
-	// get the user pub key
-	publicKey, err := getUserPublicKey(toUser, friendKeyPath)
-	if err != nil {
-		return encMessage, err
-	}
-
-	encMessage, err = rsa.EncryptOAEP(sha256.New(), rand.Reader, publicKey, payload, label)
-	if err != nil {
-		return encMessage, err
-	}
-
-	return encMessage, nil
-	*/
 
 	var encMessage, label []byte
 
@@ -115,29 +101,9 @@ func EncryptMessageWithPublicKey(payload []byte, toUser string, friendKeyPath st
 		encMessage = append(encMessage, encryptedBlockBytes...)
 	}
 
+	// sign the message
+
 	return encMessage, nil
-	/*
-
-		msgLen := len(msg)
-		    step := public.Size() - 2*hash.Size() - 2
-		    var encryptedBytes []byte
-
-		    for start := 0; start < msgLen; start += step {
-		        finish := start + step
-		        if finish > msgLen {
-		            finish = msgLen
-		        }
-
-		        encryptedBlockBytes, err := rsa.EncryptOAEP(hash, random, public, msg[start:finish], label)
-		        if err != nil {
-		            return nil, err
-		        }
-
-		        encryptedBytes = append(encryptedBytes, encryptedBlockBytes...)
-		    }
-
-		    return encryptedBytes, nil
-	*/
 }
 
 // helper to get the users key
@@ -219,43 +185,38 @@ func getPrivateKey(file string) (*rsa.PrivateKey, error) {
 	return privateKey, nil
 }
 
-/*
-package main
+// SignPayload returns a signature of the payload using sender private key
+func SignPayload(payload []byte, file string) ([]byte, error) {
+	var sig []byte
 
-import (
-	"crypto/ecdsa"
-	"crypto/elliptic"
-	"crypto/rand"
-	"fmt"
-	"log"
-)
-
-func main() {
-	// Generate a new private key.
-	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+	// get the user priv key
+	privateKey, err := getPrivateKey(file)
 	if err != nil {
-		log.Fatal(err)
+		return sig, err
 	}
 
-	// Encode the message to be signed.
-	message := []byte("hello, world")
+	hashed := sha256.Sum256(payload)
 
-	// Sign the message with the private key.
-	r, s, err := ecdsa.Sign(rand.Reader, privateKey, message)
+	sig, err = rsa.SignPKCS1v15(rand.Reader, privateKey, crypto.SHA256, hashed[:])
 	if err != nil {
-		log.Fatal(err)
+		return sig, err
 	}
 
-	// Extract the public key from the private key.
-	publicKey := privateKey.Public().(*ecdsa.PublicKey)
-
-	// Verify the signature with the public key.
-	if ecdsa.Verify(publicKey, message, r, s) {
-		fmt.Println("Signature is valid.")
-	} else {
-		fmt.Println("Signature is invalid.")
-	}
+	return sig, nil
 }
 
+// VerifySignature checks that the signture is valid for the sending user
+func VerifySignature(sender string, msg []byte, friendKeyPath string, sig []byte) (bool, error) {
+	// get the user pub key
+	publicKey, err := getUserPublicKey(sender, friendKeyPath)
+	if err != nil {
+		return false, err
+	}
 
-*/
+	hashed := sha256.Sum256(msg)
+	if err := rsa.VerifyPKCS1v15(publicKey, crypto.SHA256, hashed[:], sig); err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
